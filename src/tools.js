@@ -1,0 +1,1 @@
+export const getHoursAndMinutes = (date) => `${new Date(date).getHours()} : ${new Date(date).getMinutes()}`;
