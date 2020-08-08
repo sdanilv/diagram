@@ -1,24 +1,26 @@
 import axios from "axios";
+import { WEEK } from "./tools/constant";
 
 const axiosInstance = axios.create({
-    baseURL: "https://application0.impulse.ottry.com/api/",
-    headers: {
-        Authorization:
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1ZjJiY2E1ZjJhNmM2MzMwMjI3NTE5ZmMiLCJpYXQiOjE1OTY3MTc4OTcsImV4cCI6MTYwMjI0NzQ5N30.G6amFIw2pBWGyn3DXd-sX8voSgg93ogjdfVVEwltvKJfliDn5GsL77z3A5o85jMRsD55RqFtVrjMhHrnZ11MKA",
-    }
+  baseURL: "http://localhost:3004/",
 });
 
-export const getEndpoints = async () => {
-    const response = await axiosInstance.get("users/5f2bca5f2a6c6330227519fc/pageImpulseIdProjections?page=0&size=100&sort=id%2Cdesc&status=4");
-    return response.data.content
+export const fetchImpulsesForType = async (type = "month") => {
+  let impulses = [];
+  if (type === WEEK) {
+    const { data } = await axiosInstance.get(
+      `month?_sort=id&_order=desc&_limit=14`
+    );
+    impulses = data.reverse();
+  } else {
+    const { data } = await axiosInstance.get(`${type}`);
+    impulses = data;
+  }
+  return impulses;
 };
-
-export const getImpulse = async (id) => {
-    const response = await axiosInstance.get(`/impulses/search/findById?id=${id}`);
-    return response.data
-};
-
-export const fetchDiagramDate = async () =>{
-    const {data} = await axios.get("http://localhost:3004/impulses");
-    return data.map( a => ({date:a.date, sum:+a.sum, count:+a.count}))
+export const fetchImpulsesInRange = async (from, to) => {
+  console.log(`range?from=${from}&to=${to}`);
+  const { data } = await axiosInstance.get(`month?_start=${10}&_end=${20}`);
+  // const { data } = await axiosInstance.get(`range?from=${from}&to=${to}`);
+  return data;
 };
