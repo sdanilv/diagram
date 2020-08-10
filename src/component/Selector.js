@@ -10,7 +10,7 @@ const { RangePicker } = DatePicker;
 const RANGE = "range";
 
 const Selector = ({ fetchImpulses, fetchImpulsesInRange }) => {
-  const [type, setType] = useState(MONTH);
+  const [type, setType] = useState(WEEK);
 
   const onChangeType = (newType) => {
     if (newType === RANGE) {
@@ -48,10 +48,10 @@ const Selector = ({ fetchImpulses, fetchImpulsesInRange }) => {
       )}
 
       <Select defaultValue={type} onChange={onChangeType}>
-        <Option value={MONTH}>Месяц</Option>
-        <Option value={YEAR}>Год</Option>
         <Option value={DAY}>День</Option>
         <Option value={WEEK}>Неделя</Option>
+        <Option value={MONTH}>Месяц</Option>
+        <Option value={YEAR}>Год</Option>
         <Option value={RANGE}>Диапазон</Option>
       </Select>
     </>

@@ -4,7 +4,13 @@ import { fetchImpulses, loadImpulsesInRange } from "../redux/reducer";
 import Diagram from "./Diagram";
 import Selector from "./Selector";
 
-const Diagrams = ({ impulses, fetchImpulses, fetchImpulsesInRange }) => {
+const Diagrams = ({
+  impulses,
+  fetchImpulses,
+  fetchImpulsesInRange,
+  totalCount,
+  totalSum,
+}) => {
   useEffect(() => {
     fetchImpulses();
   }, [fetchImpulses]);
@@ -18,10 +24,17 @@ const Diagrams = ({ impulses, fetchImpulses, fetchImpulsesInRange }) => {
         />
       </div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <Diagram impulses={impulses} title="Прибыль" x="date" y="sum" />
         <Diagram
           impulses={impulses}
-          title="Количество продаж"
+          total={totalSum}
+          title={`Прибыль`}
+          x="date"
+          y="sum"
+        />
+        <Diagram
+          impulses={impulses}
+          title={`Количество продаж`}
+          total={totalCount}
           x="date"
           y="count"
         />
@@ -30,7 +43,11 @@ const Diagrams = ({ impulses, fetchImpulses, fetchImpulsesInRange }) => {
   );
 };
 
-const mstp = (state) => ({ impulses: state.impulses });
+const mstp = (state) => ({
+  impulses: state.impulses,
+  totalCount: state.totalCount,
+  totalSum: state.totalSum,
+});
 export default connect(mstp, {
   fetchImpulses,
   fetchImpulsesInRange: loadImpulsesInRange,

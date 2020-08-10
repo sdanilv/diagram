@@ -16,13 +16,15 @@ export const renderChart = (data, container, x, y) => {
     shared: true,
     showMarkers: false,
   });
+  chart.legend(false)
   chart
     .interval()
     .position(`${x}*${y}`)
     .adjust("stack")
-    .color("name", ["#40a9ff", "#1890ff"]);
+    .color("name", ["#315cff", "#1890ff"])
   // .label(y)
-  chart.interaction("brush");
+
+  // chart.interaction("brush");
   chart.interaction("active-region");
   chart.render();
   return chart;
