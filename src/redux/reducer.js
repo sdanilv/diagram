@@ -1,51 +1,86 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchImpulsesForType, fetchImpulsesInRange } from "../api";
-import { MONTH, WEEK } from "../tools/constant";
+import {
+  fetchImpulsesInRange,
+  getImpulses,
+  getServices,
+  getServicesName,
+} from "../api";
+import { MONTH, WEEK, YEAR } from "../tools/constant";
 import { formattedDate } from "../tools/FomatedDate";
 
 const chartSlice = createSlice({
   name: "chart",
   initialState: {
+    dateType: YEAR,
     services: [],
+    fetchedData: [],
     checked: [],
-    totalCount: 0,
-    totalSum: 0,
-    charData:[]
+    charData: [],
   },
+
   reducers: {
-    loadImpulses(state, { payload }) {
-      state.services = payload;
+    setCheckedAC(state, { payload }) {
+      state.checked = payload;
     },
-    chartDate(state, { payload }){
-      state.totalCount = payload.totalCount;
-      state.totalSum = payload.totalSum;
-      state.charData = payload.data
-    }
+    setDateType(state, { payload }) {
+      state.dateType = payload;
+    },
+    setServicesName(state, { payload }) {
+      state.services = payload;
+      state.checked = payload;
+    },
+    changeFetchedData(state, { payload }) {
+      state.fetchedData = payload.fetchedData;
+    },
+    loadChartDate(state, { payload }) {
+      let charData = [];
+      payload.forEach((item) => {
+        charData = charData.concat(
+          item.impulses.map((imp) => ({
+            name: item.name,
+            sum: +imp.sum,
+            count: +imp.count,
+            date: formattedDate(state.dateType, imp.date),
+          }))
+        );
+      });
+      state.charData = charData;
+    },
   },
 });
 
 const { actions, reducer } = chartSlice;
-const { loadImpulses } = actions;
+export const {
+  changeFetchedData,
+  setServicesName,
+  loadChartDate,
+  setDateType,
+  setCheckedAC,
+} = actions;
 export default reducer;
 
-export const fetchImpulses = (type = WEEK) => async (dispatch) => {
-  let impulses = await fetchImpulsesForType(type);
-  impulses = impulses.map((imp) => ({
-    ...imp,
-    sum: +imp.sum,
-    count: +imp.count,
-    date: formattedDate(type, imp.date),
-  }));
-
-  const [totalCount, totalSum] = impulses.reduce(
-    (accum, imp) => [accum[0] + imp.count, accum[1] + imp.sum],
-    [0, 0]
-  );
-  console.log(totalCount);
-  dispatch(loadImpulses({ impulses, totalCount, totalSum }));
+export const fetchServiceName = () => async (dispatch) => {
+  const services = await getServicesName();
+  dispatch(setServicesName(services));
 };
 
+export const fetchData = () => async (dispatch, getState) => {
+  const { dateType } = getState();
+  await dispatch(fetchServiceName());
+  let fetchedData = [];
+  if (getState().services === 0) return;
+  if (getState().services === 1) fetchedData = await getImpulses(dateType);
+  else fetchedData = await getServices(dateType);
+  dispatch(changeFetchedData({ fetchedData }));
+  dispatch(loadChartDate(fetchedData));
+};
 
+export const setChecked = (checked) => async (dispatch, getState) => {
+  dispatch(setCheckedAC(checked));
+  const { fetchedData } = getState();
+  const filterData = fetchedData.filter((data) => checked.includes(data.name));
+  dispatch(loadChartDate(filterData));
+};
 
 export const loadImpulsesInRange = (from, to) => async (dispatch) => {
   let impulses = await fetchImpulsesInRange(from, to);
@@ -56,5 +91,5 @@ export const loadImpulsesInRange = (from, to) => async (dispatch) => {
     date: formattedDate(MONTH, imp.date),
   }));
 
-  dispatch(loadImpulses(impulses));
+  dispatch(changeFetchedData(impulses));
 };

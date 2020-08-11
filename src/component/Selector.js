@@ -1,4 +1,4 @@
-import { DatePicker, Select } from "antd";
+import { DatePicker, Select, Checkbox } from "antd";
 import locale from "antd/es/date-picker/locale/ru_RU";
 import "moment/locale/ru";
 import React, { useState } from "react";
@@ -9,8 +9,11 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const RANGE = "range";
 
-const Selector = ({ fetchImpulses, fetchImpulsesInRange }) => {
+const Selector = ({ fetchImpulses, fetchImpulsesInRange, services,setChecked, checked }) => {
   const [type, setType] = useState(WEEK);
+  function onChange(checkedValues) {
+    setChecked(checkedValues)
+  }
 
   const onChangeType = (newType) => {
     if (newType === RANGE) {
@@ -54,6 +57,7 @@ const Selector = ({ fetchImpulses, fetchImpulsesInRange }) => {
         <Option value={YEAR}>Год</Option>
         <Option value={RANGE}>Диапазон</Option>
       </Select>
+      <Checkbox.Group options={services} value={checked} onChange={onChange} />
     </>
   );
 };

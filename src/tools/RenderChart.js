@@ -16,7 +16,7 @@ export const renderChart = (data, container, x, y) => {
     shared: true,
     showMarkers: false,
   });
-  chart.legend(false)
+  // chart.legend(false)
   chart
     .interval()
     .position(`${x}*${y}`)
@@ -25,6 +25,7 @@ export const renderChart = (data, container, x, y) => {
   // .label(y)
 
   // chart.interaction("brush");
+  // chart.interaction('legend-visible-filter');
   chart.interaction("active-region");
   chart.render();
   return chart;

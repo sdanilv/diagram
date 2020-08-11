@@ -1,54 +1,52 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchImpulses, loadImpulsesInRange } from "../redux/reducer";
+import { fetchData, loadImpulsesInRange, setChecked } from "../redux/reducer";
 import Diagram from "./Diagram";
 import Selector from "./Selector";
 
 const Diagrams = ({
-  impulses,
-  fetchImpulses,
+  charData,
+  services,
+  fetchData,
   fetchImpulsesInRange,
-  totalCount,
-  totalSum,
+  setChecked,
+  checked,
 }) => {
   useEffect(() => {
-    fetchImpulses();
-  }, [fetchImpulses]);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Selector
-          fetchImpulses={fetchImpulses}
+          checked={checked}
+          setChecked={setChecked}
+          services={services}
+          fetchData={fetchData}
           fetchImpulsesInRange={fetchImpulsesInRange}
         />
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <Diagram
-          impulses={impulses}
-          total={totalSum}
-          title={`Прибыль`}
-          x="date"
-          y="sum"
-        />
-        <Diagram
-          impulses={impulses}
-          title={`Количество продаж`}
-          total={totalCount}
-          x="date"
-          y="count"
-        />
-      </div>
+      {charData && charData !== 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <Diagram impulses={charData} title={`Прибыль`} x="date" y="sum" />
+          <Diagram
+            impulses={charData}
+            title={`Количество продаж`}
+            x="date"
+            y="count"
+          />
+        </div>
+      )}
     </>
   );
 };
 
 const mstp = (state) => ({
-  impulses: state.impulses,
-  totalCount: state.totalCount,
-  totalSum: state.totalSum,
+  charData: state.charData,
+  services: state.services,
+  checked: state.checked,
 });
-export default connect(mstp, {
-  fetchImpulses,
-  fetchImpulsesInRange: loadImpulsesInRange,
-})(Diagrams);
+export default connect(mstp, { setChecked, fetchData, loadImpulsesInRange })(
+  Diagrams
+);

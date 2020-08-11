@@ -5,11 +5,22 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:3004/",
 });
 
-export const fetchImpulsesForType = async (type = "month") => {
-  const { data } = await axiosInstance.get(`${type===WEEK?MONTH:type}`);
-
-  return data;
+export const getServicesName = async () =>{
+  const{ data } = await axiosInstance.get(`services`);
+  return data
 };
+
+export const getServices  = async (type = "month") => {
+  const { data } = await axiosInstance.get(`${type===WEEK?MONTH:type}S`);
+  return data
+};
+
+export const getImpulses  = async (type = "month") => {
+  const { data } = await axiosInstance.get(`${type===WEEK?MONTH:type}I`);
+  return data;
+
+};
+
 export const fetchImpulsesInRange = async (from, to) => {
   console.log(`range?from=${from}&to=${to}`);
   const { data } = await axiosInstance.get(`month`);
