@@ -4,7 +4,7 @@
     {
       "id": 1,
       "name": "Первый сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 8,
           "count": 49,
@@ -154,7 +154,7 @@
     {
       "id": 2,
       "name": "Второй сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 6,
           "count": 91,
@@ -306,7 +306,7 @@
     {
       "id": 1,
       "name": "Эндпоинт 1",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 8,
           "count": 49,
@@ -456,7 +456,7 @@
     {
       "id": 2,
       "name": "Эндпоинт 2",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 6,
           "count": 91,
@@ -608,7 +608,7 @@
     {
       "id": 1,
       "name": "Первый сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 86,
           "count": 8626,
@@ -794,7 +794,7 @@
     {
       "id": 2,
       "name": "Второй сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 99,
           "count": 1654,
@@ -982,7 +982,7 @@
     {
       "id": 1,
       "name": "Эндпоинт 1",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 86,
           "count": 8626,
@@ -1168,7 +1168,7 @@
     {
       "id": 2,
       "name": "Эндпоинт 2",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 99,
           "count": 1654,
@@ -1356,7 +1356,7 @@
     {
       "id": 1,
       "name": "Первый сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 8,
           "count": 7827,
@@ -1404,7 +1404,7 @@
     {
       "id": 2,
       "name": "Второй сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 35,
           "count": 7520,
@@ -1454,7 +1454,7 @@
     {
       "id": 1,
       "name": "Эндпоинт 1",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 86,
           "count": 8626,
@@ -1502,7 +1502,7 @@
     {
       "id": 2,
       "name": "Эндпоинт 2",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 99,
           "count": 1654,
@@ -1552,7 +1552,7 @@
     {
       "id": 1,
       "name": "Первый сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 25,
           "count": 5785,
@@ -1630,7 +1630,7 @@
     {
       "id": 2,
       "name": "Второй сервис",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 98,
           "count": 3821,
@@ -1710,7 +1710,7 @@
     {
       "id": 1,
       "name": "Эндпоинт 1",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 225,
           "count": 75,
@@ -1788,7 +1788,7 @@
     {
       "id": 2,
       "name": "Эндпоинт 2",
-      "impulses": [
+      "endpoints": [
         {
           "sum": 98,
           "count": 21,

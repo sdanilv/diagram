@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getDataInRange, getImpulses, getServices, getServicesName,} from "../api";
+import {getDataInRange, getEndpoints, getServices, getServicesName,} from "../api";
 import {MONTH, WEEK} from "../tools/constant";
 import {formattedDate} from "../tools/FomatedDate";
 
@@ -8,16 +8,16 @@ const chartSlice = createSlice({
     initialState: {
         dateType: WEEK,
         services: [],
-        impulses: [],
+        endpoints: [],
         fetchedData: [],
         checkedServices: [],
-        checkedImpulses: [],
-        impulsesData: [],
+        checkedEndpoints: [],
+        endpointsData: [],
         charData: [],
     },
     reducers: {
-        checkedImpulsesAC(state, {payload}) {
-            state.checkedImpulses = payload;
+        checkedEndpointsAC(state, {payload}) {
+            state.checkedEndpoints = payload;
         },
         setCheckedServicesAC(state, {payload}) {
             state.checkedServices = payload;
@@ -29,11 +29,11 @@ const chartSlice = createSlice({
             state.services = payload;
             state.checkedServices = payload;
         },
-        setImpulses(state, {payload}) {
-            const impulses = payload.map((impulses) => impulses.name);
-            state.impulses = impulses;
-            state.impulsesData = payload;
-            state.checkedImpulses = impulses;
+        setEndpoints(state, {payload}) {
+            const endpoints = payload.map((endpoints) => endpoints.name);
+            state.endpoints = endpoints;
+            state.endpointsData = payload;
+            state.checkedEndpoints = endpoints;
         },
         changeFetchedData(state, {payload}) {
             state.fetchedData = payload.fetchedData;
@@ -42,7 +42,7 @@ const chartSlice = createSlice({
             let charData = [];
             payload.forEach((item) => {
                 charData = charData.concat(
-                    item.impulses.map((imp) => ({
+                    item.endpoints.map((imp) => ({
                         name: item.name,
                         sum: +imp.sum,
                         count: +imp.count,
@@ -57,13 +57,13 @@ const chartSlice = createSlice({
 
 const {actions, reducer} = chartSlice;
 export const {
-    setImpulses,
+    setEndpoints,
     changeFetchedData,
     setServicesName,
     loadChartData,
     setDateType,
     setCheckedServicesAC,
-    checkedImpulsesAC,
+    checkedEndpointsAC,
 } = actions;
 export default reducer;
 
@@ -78,7 +78,7 @@ export const fetchData = () => async (dispatch, getState) => {
     let fetchedData = [];
     if (getState().services.length === 0) return;
     if (getState().services.length === 1) {
-        fetchedData = await getImpulses(dateType);
+        fetchedData = await getEndpoints(dateType);
     } else fetchedData = await getServices(dateType);
     dispatch(changeFetchedData({fetchedData}));
     dispatch(loadChartData(fetchedData));
@@ -88,20 +88,20 @@ export const setCheckedServices = (checked) => async (dispatch, getState) => {
     const {dateType, fetchedData} = getState();
     let data;
     if (checked.length === 1) {
-        data = await getImpulses(dateType, checked[0]);
-        dispatch(setImpulses(data));
+        data = await getEndpoints(dateType, checked[0]);
+        dispatch(setEndpoints(data));
     } else data = fetchedData.filter((service) => checked.includes(service.name));
     dispatch(setCheckedServicesAC(checked));
     dispatch(loadChartData(data));
 };
-export const setCheckedImpulses = (checked) => (dispatch, getState) => {
-    const {impulsesData} = getState();
-    let data = impulsesData.filter((impulse) => checked.includes(impulse.name));
-    dispatch(checkedImpulsesAC(checked));
+export const setCheckedEndpoints = (checked) => (dispatch, getState) => {
+    const {endpointsData} = getState();
+    let data = endpointsData.filter((endpoint) => checked.includes(endpoint.name));
+    dispatch(checkedEndpointsAC(checked));
     dispatch(loadChartData(data));
 };
 export const loadDataInRange = (from, to) => async (dispatch) => {
-    let impulses = await getDataInRange(from, to);
+    let endpoints = await getDataInRange(from, to);
     dispatch(setDateType(MONTH));
-    dispatch(changeFetchedData(impulses));
+    dispatch(changeFetchedData(endpoints));
 };

@@ -13,16 +13,16 @@ const Selector = ({
   checkedServices,
   setDateType,
   dateType,
-  impulses,
-  checkedImpulses,
-  setCheckedImpulses,
+  endpoints,
+  checkedEndpoints,
+  setCheckedEndpoints,
 }) => {
   function onChange(checkedValues) {
     setCheckedServices(checkedValues);
   }
 
   function onChangeEndpoints(checkedValues) {
-    setCheckedImpulses(checkedValues);
+    setCheckedEndpoints(checkedValues);
   }
 
   const onChangeType = (newType) => {
@@ -55,12 +55,12 @@ const Selector = ({
           />
         </div>
       )}
-      {checkedServices.length === 1 && impulses.length !== 1 && (
+      {checkedServices.length === 1 && endpoints.length !== 1 && (
         <div>
           Товары:&nbsp;
           <Checkbox.Group
-            options={impulses}
-            value={checkedImpulses}
+            options={endpoints}
+            value={checkedEndpoints}
             onChange={onChangeEndpoints}
           />
         </div>

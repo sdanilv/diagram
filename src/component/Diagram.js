@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { renderChart } from "../tools/RenderChart";
 
-const Diagram = ({ impulses, title, x, y }) => {
+const Diagram = ({ endpoints, title, x, y }) => {
   let chartCount = useRef(null);
   const container = useRef(null);
-  const total = useMemo(() => impulses.reduce((acc, imp) => acc + imp[y], 0), [
-    impulses,
+  const total = useMemo(() => endpoints.reduce((acc, imp) => acc + imp[y], 0), [
+    endpoints,
     y,
   ]);
   useEffect(() => {
-    if (impulses.length) {
+    if (endpoints.length) {
       if (chartCount.current) chartCount.current.destroy();
-      chartCount.current = renderChart(impulses, container.current, x, y);
+      chartCount.current = renderChart(endpoints, container.current, x, y);
     }
-  }, [impulses, x, y]);
+  }, [endpoints, x, y]);
 
   return (
     <div ref={container} style={{ margin: 10, border: "4px double black" }}>

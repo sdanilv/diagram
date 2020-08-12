@@ -14,7 +14,7 @@ export const getServices = async (type = "month") => {
   return data;
 };
 
-export const getImpulses = async (type = "month", service) => {
+export const getEndpoints = async (type = "month", service) => {
   const { data } = await axiosInstance.get(`${type}I`);
   return data;
 };

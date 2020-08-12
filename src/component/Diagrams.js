@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
-  setCheckedImpulses,
+  setCheckedEndpoints,
   fetchData,
   loadDataInRange,
   setCheckedServices,
@@ -21,9 +21,9 @@ const Diagrams = (props) => {
       <Selector {...props} />
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <Diagram impulses={charData} title={`Прибыль`} x="date" y="sum" />
+        <Diagram endpoints={charData} title={`Прибыль`} x="date" y="sum" />
         <Diagram
-          impulses={charData}
+          endpoints={charData}
           title={`Количество продаж`}
           x="date"
           y="count"
@@ -37,14 +37,14 @@ const mstp = (state) => ({
   charData: state.charData,
   services: state.services,
   checkedServices: state.checkedServices,
-  checkedImpulses: state.checkedImpulses,
+  checkedEndpoints: state.checkedEndpoints,
   dateType: state.dateType,
-  impulses: state.impulses,
+  endpoints: state.endpoints,
 });
 export default connect(mstp, {
   setCheckedServices,
   fetchData,
   loadDataInRange,
   setDateType,
-  setCheckedImpulses,
+  setCheckedEndpoints,
 })(Diagrams);
