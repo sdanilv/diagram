@@ -4,10 +4,10 @@ import { renderChart } from "../tools/RenderChart";
 const Diagram = ({ impulses, title, x, y }) => {
   let chartCount = useRef(null);
   const container = useRef(null);
-  const total = useMemo(
-    () => impulses.reduce((acc, imp) => acc + imp[y], 0),
-    [impulses]
-  );
+  const total = useMemo(() => impulses.reduce((acc, imp) => acc + imp[y], 0), [
+    impulses,
+    y,
+  ]);
   useEffect(() => {
     if (impulses.length) {
       if (chartCount.current) chartCount.current.destroy();

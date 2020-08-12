@@ -1,63 +1,70 @@
-import { DatePicker, Select, Checkbox } from "antd";
-import locale from "antd/es/date-picker/locale/ru_RU";
-import "moment/locale/ru";
-import React, { useState } from "react";
-import { DAY, MONTH, WEEK, YEAR } from "../tools/constant";
-import moment from "moment";
+import { Select, Checkbox } from "antd";
+import React from "react";
+import { DAY, MONTH, RANGE, WEEK, YEAR } from "../tools/constant";
+import DatePanel from "./DatePanel";
 
 const { Option } = Select;
-const { RangePicker } = DatePicker;
-const RANGE = "range";
 
-const Selector = ({ fetchImpulses, fetchImpulsesInRange, services,setChecked, checked }) => {
-  const [type, setType] = useState(WEEK);
+const Selector = ({
+  fetchData,
+                    loadDataInRange,
+  services,
+  setCheckedServices,
+  checkedServices,
+  setDateType,
+  dateType,
+  impulses,
+  checkedImpulses,
+  setCheckedImpulses,
+}) => {
   function onChange(checkedValues) {
-    setChecked(checkedValues)
+    setCheckedServices(checkedValues);
+  }
+
+  function onChangeEndpoints(checkedValues) {
+    setCheckedImpulses(checkedValues);
   }
 
   const onChangeType = (newType) => {
     if (newType === RANGE) {
-      setType(newType);
+      setDateType(newType);
       return;
     }
-    fetchImpulses(newType);
-    setType(newType);
-  };
-
-  const onChangeRange = (value) => {
-    fetchImpulsesInRange(value[0]._d, value[1]._d);
-  };
-  const onChangeDate = (value, date) => {
-    if (value === null) return;
-    console.log(date);
-    fetchImpulses(type, value._d);
+    setDateType(newType);
+    fetchData();
   };
 
   return (
     <>
-      {type === RANGE ? (
-        <RangePicker
-          locale={locale}
-          onChange={onChangeRange}
-          format={"DD.MM.YYYY"}
-        />
-      ) : (
-        <DatePicker
-          locale={locale}
-          onChange={onChangeDate}
-          defaultValue={moment()}
-          picker={type === DAY ? "date" : type}
-        />
-      )}
+      <DatePanel {...{ dateType, loadDataInRange, fetchData }} />
 
-      <Select defaultValue={type} onChange={onChangeType}>
+      <Select value={dateType} onChange={onChangeType}>
         <Option value={DAY}>День</Option>
         <Option value={WEEK}>Неделя</Option>
         <Option value={MONTH}>Месяц</Option>
         <Option value={YEAR}>Год</Option>
         <Option value={RANGE}>Диапазон</Option>
       </Select>
-      <Checkbox.Group options={services} value={checked} onChange={onChange} />
+      {services.length !== 1 && (
+        <div>
+          Сервисы:&nbsp;
+          <Checkbox.Group
+            options={services}
+            value={checkedServices}
+            onChange={onChange}
+          />
+        </div>
+      )}
+      {checkedServices.length === 1 && impulses.length !== 1 && (
+        <div>
+          Товары:&nbsp;
+          <Checkbox.Group
+            options={impulses}
+            value={checkedImpulses}
+            onChange={onChangeEndpoints}
+          />
+        </div>
+      )}
     </>
   );
 };
