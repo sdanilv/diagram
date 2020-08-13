@@ -16,7 +16,7 @@ const Diagram = ({ endpoints, title, x, y }) => {
   }, [endpoints, x, y]);
 
   return (
-    <div ref={container} style={{ margin: 10, border: "4px double black" }}>
+    <div ref={container} style={{ padding:20, margin: 10,width:"100%" , height:"300px", border: "4px double black" }}>
       <div> {title}</div>
       <b>{` Всего: ${total}`}</b>
     </div>
