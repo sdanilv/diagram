@@ -37,7 +37,6 @@ const Selector = ({
   return (
     <>
       <DatePanel {...{ dateType, loadDataInRange, fetchData }} />
-
       <Select value={dateType} onChange={onChangeType}>
         <Option value={DAY}>День</Option>
         <Option value={WEEK}>Неделя</Option>
