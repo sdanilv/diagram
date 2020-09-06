@@ -1,15 +1,17 @@
-const fetchToUrl = async (url) => {
+const fetchFromUrl = async (url) => {
   let response = await fetch(`http://localhost:3004/${url}`);
   return await response.json();
 };
 
-export const getServicesName = () => fetchToUrl(`services`);
+export const getServicesName = (type, date) => fetchFromUrl(`services`);
+//fetchFromUrl(`services\names\?type=${type}&date=${date}`)
+//fetchFromUrl(`services\names\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getServices = (type = "month") => fetchToUrl(`${type}S`);
-//fetchToUrl(`services\?type=${type}`)
+export const getServices = (type = "month", date) => fetchFromUrl(`${type}S`);
+//fetchFromUrl(`services\?type=${type}&date=${date}`)
+//fetchFromUrl(`services\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getEndpoints = (type = "month", service) => fetchToUrl(`${type}I`);
-//fetchToUrl(`service\?id=${service}&type=${type}`)
+export const getEndpoints = (type = "month", service, date) => fetchFromUrl(`${type}I`);
+//fetchFromUrl(`service\?id=${service}&type=${type}&date=${date}`)
+//fetchFromUrl(`service\?id=${service}&type=range&from=${date.from}&to=${date.to}`)
 
-export const getDataInRange = (from, to) => fetchToUrl(`monthS`);
-// fetchToUrl(`range?from=${from}&to=${to}`);

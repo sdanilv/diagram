@@ -30,8 +30,8 @@ const Selector = ({
       setDateType(newType);
       return;
     }
-    setDateType(newType);
-    fetchData();
+
+    fetchData(newType);
   };
 
   return (
