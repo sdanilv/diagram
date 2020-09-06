@@ -9,6 +9,7 @@ import {
 } from "../redux/reducer";
 import Diagram from "./Diagram";
 import Selector from "./Selector";
+import style from "./Diagrams.module.css"
 
 const Diagrams = (props) => {
   const { charData, fetchData } = props;
@@ -20,7 +21,7 @@ const Diagrams = (props) => {
     <>
       <Selector {...props} />
 
-      <div style={{ display: "flex", flexWrap: "wrap" , width:"100%", height:"100%"}}>
+      <div className={style.diagrams}>
         <Diagram endpoints={charData} title={`Прибыль`} x="date" y="sum" />
         <Diagram
           endpoints={charData}
