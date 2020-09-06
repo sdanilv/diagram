@@ -73,12 +73,12 @@ export const fetchServiceName = () => async (dispatch) => {
 };
 
 export const fetchData = () => async (dispatch, getState) => {
-    const {dateType} = getState();
     await dispatch(fetchServiceName());
+    const {dateType, services} = getState();
     let fetchedData = [];
-    if (getState().services.length === 0) return;
-    if (getState().services.length === 1) {
-        fetchedData = await getEndpoints(dateType);
+    if (services.length === 0) return;
+    if (services.length === 1) {
+        fetchedData = await getEndpoints(dateType, services[0]);
     } else fetchedData = await getServices(dateType);
     dispatch(changeFetchedData({fetchedData}));
     dispatch(loadChartData(fetchedData));
