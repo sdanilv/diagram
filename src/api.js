@@ -1,27 +1,17 @@
-import axios from "axios";
-
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:3004/",
-});
-
-export const getServicesName = async () => {
-  const { data } = await axiosInstance.get(`services`);
-  return data;
+const fetchFromUrl = async (url) => {
+  let response = await fetch(`http://localhost:3004/${url}`);
+  return await response.json();
 };
 
-export const getServices = async (type = "month") => {
-  const { data } = await axiosInstance.get(`${type}S`);
-  return data;
-};
+export const getServicesName = (type, date) => fetchFromUrl(`services`);
+//fetchFromUrl(`services\names\?type=${type}&date=${date}`)
+//fetchFromUrl(`services\names\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getEndpoints = async (type = "month", service) => {
-  const { data } = await axiosInstance.get(`${type}I`);
-  return data;
-};
+export const getServices = (type = "month", date) => fetchFromUrl(`${type}S`);
+//fetchFromUrl(`services\?type=${type}&date=${date}`)
+//fetchFromUrl(`services\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getDataInRange = async (from, to) => {
-  console.log(`range?from=${from}&to=${to}`);
-  const { data } = await axiosInstance.get(`monthS`);
-  // const { data } = await axiosInstance.get(`range?from=${from}&to=${to}`);
-  return data;
-};
+export const getEndpoints = (type = "month", service, date) => fetchFromUrl(`${type}I`);
+//fetchFromUrl(`service\?id=${service}&type=${type}&date=${date}`)
+//fetchFromUrl(`service\?id=${service}&type=range&from=${date.from}&to=${date.to}`)
+

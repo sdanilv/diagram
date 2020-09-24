@@ -1,29 +1,40 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import {
-  setCheckedEndpoints,
-  fetchData,
-  loadDataInRange,
-  setCheckedServices,
-  setDateType,
-} from "../redux/reducer";
+import React, { useEffect, useState } from "react";
+import { getReducers } from "../redux/reducers";
+import { WEEK } from "../tools/constant";
 import Diagram from "./Diagram";
+import style from "./Diagrams.module.css";
 import Selector from "./Selector";
 
-const Diagrams = (props) => {
-  const { charData, fetchData } = props;
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+const Diagrams = () => {
+  const [state, setState] = useState({
+    dateType: WEEK,
+    services: [],
+    endpoints: [],
+    fetchedData: [],
+    checkedServices: [],
+    checkedEndpoints: [],
+    endpointsData: [],
+    charData: [],
+  });
+  const reducers = getReducers(state, setState);
 
+  useEffect(() => {
+    reducers.fetchServiceName(state.dateType);
+    reducers.fetchData(state.dateType);
+  }, []);
   return (
     <>
-      <Selector {...props} />
+      <Selector {...state} {...reducers} />
 
-      <div style={{ display: "flex", flexWrap: "wrap" , width:"100%", height:"100%"}}>
-        <Diagram endpoints={charData} title={`Прибыль`} x="date" y="sum" />
+      <div className={style.diagrams}>
         <Diagram
-          endpoints={charData}
+          endpoints={state.charData}
+          title={`Прибыль`}
+          x="date"
+          y="sum"
+        />
+        <Diagram
+          endpoints={state.charData}
           title={`Количество продаж`}
           x="date"
           y="count"
@@ -33,18 +44,4 @@ const Diagrams = (props) => {
   );
 };
 
-const mstp = (state) => ({
-  charData: state.charData,
-  services: state.services,
-  checkedServices: state.checkedServices,
-  checkedEndpoints: state.checkedEndpoints,
-  dateType: state.dateType,
-  endpoints: state.endpoints,
-});
-export default connect(mstp, {
-  setCheckedServices,
-  fetchData,
-  loadDataInRange,
-  setDateType,
-  setCheckedEndpoints,
-})(Diagrams);
+export default Diagrams;

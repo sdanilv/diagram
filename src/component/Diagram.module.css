@@ -1,0 +1,7 @@
+.diagram {
+  padding: 20px;
+  margin: 10px;
+  width: 100%;
+  height: 300px;
+  border: 4px double black;
+}

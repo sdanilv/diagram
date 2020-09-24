@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { renderChart } from "../tools/RenderChart";
+import style from "./Diagram.module.css";
 
 const Diagram = ({ endpoints, title, x, y }) => {
   let chartCount = useRef(null);
@@ -16,7 +17,7 @@ const Diagram = ({ endpoints, title, x, y }) => {
   }, [endpoints, x, y]);
 
   return (
-    <div ref={container} style={{ padding:20, margin: 10,width:"100%" , height:"300px", border: "4px double black" }}>
+    <div ref={container} className={style.diagram}>
       <div> {title}</div>
       <b>{` Всего: ${total}`}</b>
     </div>

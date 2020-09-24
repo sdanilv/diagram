@@ -7,14 +7,13 @@ import { DAY, RANGE, YEAR } from "../tools/constant";
 
 const { RangePicker } = DatePicker;
 
-const DatePanel = ({ dateType, loadDataInRange, fetchData }) => {
+const DatePanel = ({ dateType, fetchData }) => {
   const onChangeRange = (value) => {
-      loadDataInRange(value[0]._d, value[1]._d);
+    fetchData(dateType, {from:value[0]._d, to:value[1]._d});
   };
-  const onChangeDate = (value, date) => {
+  const onChangeDateType = (value) => {
     if (value === null) return;
-    console.log(date);
-    fetchData(value._d);
+    fetchData(dateType, value._d);
   };
 
   switch (dateType) {
@@ -30,7 +29,7 @@ const DatePanel = ({ dateType, loadDataInRange, fetchData }) => {
       return (
         <DatePicker
           locale={locale}
-          onChange={onChangeDate}
+          onChange={onChangeDateType}
           defaultValue={moment()}
           picker="date"
         />
@@ -39,7 +38,7 @@ const DatePanel = ({ dateType, loadDataInRange, fetchData }) => {
       return (
         <DatePicker
           locale={locale}
-          onChange={onChangeDate}
+          onChange={onChangeDateType}
           defaultValue={moment()}
           picker="year"
         />
