@@ -4,6 +4,7 @@ import { WEEK } from "../tools/constant";
 import Diagram from "./Diagram";
 import style from "./Diagrams.module.css";
 import Selector from "./Selector";
+import {GetImpulses} from "../api";
 
 const Diagrams = () => {
   const [state, setState] = useState({
@@ -19,6 +20,7 @@ const Diagrams = () => {
   const reducers = getReducers(state, setState);
 
   useEffect(() => {
+    GetImpulses();
     reducers.fetchServiceName(state.dateType);
     reducers.fetchData(state.dateType);
   }, []);
