@@ -44,26 +44,26 @@ const Selector = ({
         <Option value={YEAR}>Год</Option>
         <Option value={RANGE}>Диапазон</Option>
       </Select>
-      {services.length !== 1 && (
-        <div>
-          Сервисы:&nbsp;
-          <Checkbox.Group
-            options={services}
-            value={checkedServices}
-            onChange={onChange}
-          />
-        </div>
-      )}
-      {checkedServices.length === 1 && endpoints.length !== 1 && (
-        <div>
-          Товары:&nbsp;
-          <Checkbox.Group
-            options={endpoints}
-            value={checkedEndpoints}
-            onChange={onChangeEndpoints}
-          />
-        </div>
-      )}
+      {/*{services.length !== 1 && (*/}
+      {/*  <div>*/}
+      {/*    Сервисы:&nbsp;*/}
+      {/*    <Checkbox.Group*/}
+      {/*      options={services}*/}
+      {/*      value={checkedServices}*/}
+      {/*      onChange={onChange}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*)}*/}
+      {/*{checkedServices.length === 1 && endpoints.length !== 1 && (*/}
+      {/*  <div>*/}
+      {/*    Товары:&nbsp;*/}
+      {/*    <Checkbox.Group*/}
+      {/*      options={endpoints}*/}
+      {/*      value={checkedEndpoints}*/}
+      {/*      onChange={onChangeEndpoints}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </>
   );
 };

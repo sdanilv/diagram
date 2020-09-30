@@ -1,4 +1,5 @@
 import moment from "moment";
+import {DAY, RANGE, WEEK, YEAR} from "./tools/constant";
 
 const fetchFromUrl = async (url) => {
   let response = await fetch(`http://localhost:3004/${url}`);
@@ -10,22 +11,23 @@ const impFetchFromUrl = async (url) => {
     {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1YmFiYTEyNjMxNTE0MDc4ZmU2NmM2NzAiLCJpYXQiOjE2MDEwMTE4MzUsImV4cCI6MTYwNjU0MTQzNX0.9IFhM3LYNGjOqhqStuUwGOMn_yb7EO9VydQmh4lHUi61vLVvvrHrBElhCEvBJpK32zp1PG-PNBgmzABlcBFo-g",
+          "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1Y2Y3NmZlOTMyZjc0ODBlZjdkY2QwMzMiLCJpYXQiOjE2MDEzNjg2MjYsImV4cCI6MTYwNjg5ODIyNn0.DLjWbVVDhg9WQpOfVTSXeqBUQ50iCUZusO3MkYkYiBIEZWjKhlLmcyyViXqMQlXov-oSQa__p9ecP1aGI6UBkQ",
       },
     }
   );
   return await response.json();
 };
 
-export const GetImpulses = async () => {
-  console.log(new Date());
+export const GetImpulses = async (dateType, date) => {
   let ret = await impFetchFromUrl(
-    "users/5baba12631514078fe66c670/pageImpulseIdProjections?page=0&size=20&sort=id%2Cdesc&status=4"
+    "users/5cf76fe932f7480ef7dcd033/pageImpulseIdProjections?page=0&size=10&sort=id%2Cdesc&status=4"
   );
   let array = [];
   for (let i = 0; i < 1; i++)
     for (const imp of ret.content) {
-      const impulse = await impFetchFromUrl(`impulses/search/findById?id=${imp.id}`);
+      const impulse = await impFetchFromUrl(
+        `impulses/search/findById?id=${imp.id}`
+      );
       for (const i of impulse.impulseEndpoints) {
         const cutImpulse = {
           date: impulse.modified,
@@ -36,34 +38,59 @@ export const GetImpulses = async () => {
         array.push(cutImpulse);
       }
     }
-  console.log(ret.content);
   let impulses = {};
-  for(const imp of array){
-    if(!impulses[imp.name])impulses[imp.name]= [];
-    impulses[imp.name].push(imp)
+  for (const imp of array) {
+    if (!impulses[imp.name]) impulses[imp.name] = [];
+    impulses[imp.name].push(imp);
   }
 
+  let dateFrom = moment();
 
+  let dateTo = moment(dateFrom).subtract(1, "months");
+  switch (dateType) {
+    case DAY:
+      dateFrom = moment(date);
+      dateTo = moment(dateFrom).subtract(1, "days");
+      break;
+    case WEEK:
+      dateTo = moment(dateFrom).subtract(1, "weeks");
+      break;
+    case YEAR:
+      dateTo = moment(dateFrom).subtract(1, "years");
+      break;
+    case RANGE:
+      dateTo = moment(date.from).subtract(1, "days");
+      dateFrom = moment(date.to);
+      break;
+  }
+
+console.log(dateFrom)
+console.log(dateTo)
   let endpointGroupedForDate = [];
-  for(const impulsesKey in impulses) {
+  let i = 0;
+  for (const impulsesKey in impulses) {
     let endpoints = [];
-    for (let date = moment(); date.valueOf() > moment().subtract(30, 'days').valueOf(); date = date.subtract(1, 'days')) {
+
+    for (
+      let date = dateFrom;
+      date.valueOf() > dateTo.valueOf();
+      date = date.subtract(1, "days")
+    ) {
       let sum = 0;
       let count = 0;
-
       for (const endp of impulses[impulsesKey]) {
-        if (date.format('l') === moment(endp.date).format('l')) {
+        if (date.format("l") === moment(endp.date).format("l")) {
           count++;
-          sum += endp.price;
+          sum = +sum + parseFloat(endp.price);
         }
-        endpoints.push({date: moment(endp.date).format('l'), count, sum})
       }
-      console.log(endpoints);
-      endpointGroupedForDate.push({name:impulsesKey, endpoints })
+      if (count !== 0) endpoints.push({ date: date.format("l"), count, sum });
     }
+
+    endpointGroupedForDate.push({ name: impulsesKey, id: i++, endpoints });
   }
-  console.log(endpointGroupedForDate);
-  console.log(new Date());
+
+  return endpointGroupedForDate;
 };
 
 export const getServicesName = (type, date) => fetchFromUrl(`services`);

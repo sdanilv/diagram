@@ -1,4 +1,4 @@
-import { getEndpoints, getServices, getServicesName } from "../api";
+import {getEndpoints, GetImpulses, getServices, getServicesName} from "../api";
 import { formattedDate } from "../tools/FomatedDate";
 
 export const getReducers = (state, setState) => ({
@@ -7,11 +7,15 @@ export const getReducers = (state, setState) => ({
     setState({ ...state, services, checkedServices: services });
   },
   fetchData: async (dateType, date) => {
-    const services = await getServicesName(dateType, date);
+    // const services = await getServicesName(dateType, date);
+    setState({...state,  loading:true })
+    const services = ["Ticket"];
     let fetchedData = [];
     if (services.length === 0) return;
     if (services.length === 1) {
-      fetchedData = await getEndpoints(dateType, services[0]);
+      // fetchedData = await getEndpoints(dateType, services[0]);
+      fetchedData = await GetImpulses(dateType, date)
+
     } else fetchedData = await getServices(dateType);
     setState({
       ...state,
@@ -19,6 +23,7 @@ export const getReducers = (state, setState) => ({
       dateType,
       services,
       checkedServices: services,
+      loading:false,
       charData: convertToChartData(fetchedData, dateType),
     });
   },
@@ -43,6 +48,7 @@ export const getReducers = (state, setState) => ({
       setState({
         ...state,
         checkedServices,
+
         charData: convertToChartData(data, state.dateType),
       });
     }
@@ -74,7 +80,7 @@ const convertToChartData = (data, dateType) => {
         name: item.name,
         sum: +imp.sum,
         count: +imp.count,
-        date: formattedDate(dateType, imp.date),
+        date:  imp.date,
       }))
     );
   });
