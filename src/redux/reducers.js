@@ -1,86 +1,88 @@
-import {getEndpoints, GetImpulses, getServices, getServicesName} from "../api";
+import { GetImpulses } from "../api";
 import { formattedDate } from "../tools/FomatedDate";
+import moment from "moment";
+import { DAY, RANGE, WEEK, YEAR } from "../tools/constant";
 
 export const getReducers = (state, setState) => ({
-  fetchServiceName: async () => {
-    const services = await getServicesName();
-    setState({ ...state, services, checkedServices: services });
-  },
   fetchData: async (dateType, date) => {
-    // const services = await getServicesName(dateType, date);
-    setState({...state,  loading:true })
-    const services = ["Ticket"];
-    let fetchedData = [];
-    if (services.length === 0) return;
-    if (services.length === 1) {
-      // fetchedData = await getEndpoints(dateType, services[0]);
-      fetchedData = await GetImpulses(dateType, date)
+    setState({ ...state, loading: true });
 
-    } else fetchedData = await getServices(dateType);
+    const fetchedData = state.fetchedData.length?state.fetchedData : await GetImpulses(dateType, date);
+
+    let impulses = {};
+    for (const impulse of fetchedData) {
+      if (!impulses[impulse.name]) impulses[impulse.name] = [];
+      impulses[impulse.name].push(impulse);
+    }
+
+    let to = moment();
+    let from = moment(to).subtract(1, "months");
+    switch (dateType) {
+      case DAY:
+        to = moment(date);
+        from = moment(to).subtract(1, "days");
+        break;
+      case WEEK:
+        from = moment(to).subtract(1, "weeks");
+        break;
+      case YEAR:
+        from = moment(to).subtract(1, "years");
+        break;
+      case RANGE:
+        from = moment(date.from)
+        to = moment(date.to).add(1, "days");
+        break;
+    }
+    console.log(from)
+
+    let endpointGroupedForDate = [];
+    let i = 0;
+    for (const impulsesKey in impulses) {
+      let endpoints = [];
+
+      for (
+        let date = from.clone();
+        date.valueOf() < to.valueOf();
+        date = date.add(1, "days")
+      ) {
+        let sum = 0;
+        let count = 0;
+        for (const endpoint of impulses[impulsesKey]) {
+          if (date.format("l") === moment(endpoint.date).format("l")) {
+            count++;
+            sum = +sum + parseFloat(endpoint.price);
+          }
+        }
+        console.log(from)
+        if (count) endpoints.push({ date: date.format("l"), count, sum });
+      }
+        endpointGroupedForDate.push({ name: impulsesKey, id: i++, endpoints });
+    }
+
     setState({
       ...state,
       fetchedData,
       dateType,
-      services,
-      checkedServices: services,
-      loading:false,
-      charData: convertToChartData(fetchedData, dateType),
+      loading: false,
+      charData: convertToChartData(endpointGroupedForDate, dateType),
     });
   },
-  setCheckedServices: async (checkedServices) => {
-    const { dateType, fetchedData } = state;
-    let data;
-    if (checkedServices.length === 1) {
-      data = await getEndpoints(dateType, checkedServices[0]);
-      const endpoints = data.map((endpoints) => endpoints.name);
-      setState({
-        ...state,
-        checkedServices,
-        endpoints: endpoints,
-        endpointsData: data,
-        checkedEndpoints: endpoints,
-        charData: convertToChartData(data, state.dateType),
-      });
-    } else {
-      data = fetchedData.filter((service) =>
-        checkedServices.includes(service.name)
-      );
-      setState({
-        ...state,
-        checkedServices,
-
-        charData: convertToChartData(data, state.dateType),
-      });
-    }
-  },
-  setCheckedEndpoints: async (checkedEndpoints) => {
-    const { endpointsData } = state;
-    let data = endpointsData.filter((endpoint) =>
-      checkedEndpoints.includes(endpoint.name)
-    );
-    setState({
-      ...state,
-      checkedEndpoints,
-      charData: convertToChartData(data, state.dateType),
-    });
-  },
-  setDateType: (dateType) => {
-    setState({
-      ...state,
-      dateType,
-    });
-  },
+  setDateType: dateType =>  setState({
+    ...state,
+    dateType,
+  })
 });
 
 const convertToChartData = (data, dateType) => {
   let charData = [];
+
   data.forEach((item) => {
     charData = charData.concat(
       item.endpoints.map((imp) => ({
         name: item.name,
         sum: +imp.sum,
         count: +imp.count,
-        date:  imp.date,
+        date: imp.date,
       }))
     );
   });

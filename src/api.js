@@ -11,7 +11,7 @@ const impFetchFromUrl = async (url) => {
     {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1Y2Y3NmZlOTMyZjc0ODBlZjdkY2QwMzMiLCJpYXQiOjE2MDEzNjg2MjYsImV4cCI6MTYwNjg5ODIyNn0.DLjWbVVDhg9WQpOfVTSXeqBUQ50iCUZusO3MkYkYiBIEZWjKhlLmcyyViXqMQlXov-oSQa__p9ecP1aGI6UBkQ",
+          "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1YmY1Njk5YmY0NDY2YjViNDgwNDc1YTciLCJpYXQiOjE2MDE1Mzk5NDQsImV4cCI6MTYwNzA2OTU0NH0.PQ1fYzCrtaOXP5Wl0yTvnme0-wXfcses7GjG4qYkWWzITqCpOt6BXQdc3-bLF8VYwb7zqfNNuW3QrvQd6xDzMA",
       },
     }
   );
@@ -19,89 +19,37 @@ const impFetchFromUrl = async (url) => {
 };
 
 export const GetImpulses = async (dateType, date) => {
-  let ret = await impFetchFromUrl(
-    "users/5cf76fe932f7480ef7dcd033/pageImpulseIdProjections?page=0&size=10&sort=id%2Cdesc&status=4"
+  let {content} = await impFetchFromUrl(
+    "users/5bf5699bf4466b5b480475a7/pageImpulseIdProjections?page=0&size=200&sort=id%2Cdesc&status=4"
   );
   let array = [];
   for (let i = 0; i < 1; i++)
-    for (const imp of ret.content) {
-      const impulse = await impFetchFromUrl(
-        `impulses/search/findById?id=${imp.id}`
+    for (const imp of content) {
+      const {impulseEndpoints, modified, impulseService} = await impFetchFromUrl(
+          `impulses/search/findById?id=${imp.id}`
       );
-      for (const i of impulse.impulseEndpoints) {
+      for (const i of impulseEndpoints) {
         const cutImpulse = {
-          date: impulse.modified,
+          date: modified,
           name: i.name,
-          service: impulse.impulseService.name,
+          service: impulseService.name,
           price: i.price,
         };
         array.push(cutImpulse);
       }
     }
-  let impulses = {};
-  for (const imp of array) {
-    if (!impulses[imp.name]) impulses[imp.name] = [];
-    impulses[imp.name].push(imp);
-  }
-
-  let dateFrom = moment();
-
-  let dateTo = moment(dateFrom).subtract(1, "months");
-  switch (dateType) {
-    case DAY:
-      dateFrom = moment(date);
-      dateTo = moment(dateFrom).subtract(1, "days");
-      break;
-    case WEEK:
-      dateTo = moment(dateFrom).subtract(1, "weeks");
-      break;
-    case YEAR:
-      dateTo = moment(dateFrom).subtract(1, "years");
-      break;
-    case RANGE:
-      dateTo = moment(date.from).subtract(1, "days");
-      dateFrom = moment(date.to);
-      break;
-  }
-
-console.log(dateFrom)
-console.log(dateTo)
-  let endpointGroupedForDate = [];
-  let i = 0;
-  for (const impulsesKey in impulses) {
-    let endpoints = [];
-
-    for (
-      let date = dateFrom;
-      date.valueOf() > dateTo.valueOf();
-      date = date.subtract(1, "days")
-    ) {
-      let sum = 0;
-      let count = 0;
-      for (const endp of impulses[impulsesKey]) {
-        if (date.format("l") === moment(endp.date).format("l")) {
-          count++;
-          sum = +sum + parseFloat(endp.price);
-        }
-      }
-      if (count !== 0) endpoints.push({ date: date.format("l"), count, sum });
-    }
-
-    endpointGroupedForDate.push({ name: impulsesKey, id: i++, endpoints });
-  }
-
-  return endpointGroupedForDate;
+  return array;
 };
 
-export const getServicesName = (type, date) => fetchFromUrl(`services`);
+// export const getServicesName = (type, date) => fetchFromUrl(`services`);
 //fetchFromUrl(`services\names\?type=${type}&date=${date}`)
 //fetchFromUrl(`services\names\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getServices = (type = "month", date) => fetchFromUrl(`${type}S`);
+// export const getServices = (type = "month", date) => fetchFromUrl(`${type}S`);
 //fetchFromUrl(`services\?type=${type}&date=${date}`)
 //fetchFromUrl(`services\?type=range&from=${date.from}&to=${date.to}`)
 
-export const getEndpoints = (type = "month", service, date) =>
-  fetchFromUrl(`${type}I`);
+// export const getEndpoints = (type = "month", service, date) =>
+//   fetchFromUrl(`${type}I`);
 //fetchFromUrl(`service\?id=${service}&type=${type}&date=${date}`)
 //fetchFromUrl(`service\?id=${service}&type=range&from=${date.from}&to=${date.to}`)

@@ -25,24 +25,24 @@ const DatePanel = ({ dateType, fetchData }) => {
           format={"DD.MM.YYYY"}
         />
       );
-    case DAY:
-      return (
-        <DatePicker
-          locale={locale}
-          onChange={onChangeDateType}
-          defaultValue={moment()}
-          picker="date"
-        />
-      );
-    case YEAR:
-      return (
-        <DatePicker
-          locale={locale}
-          onChange={onChangeDateType}
-          defaultValue={moment()}
-          picker="year"
-        />
-      );
+    // case DAY:
+    //   return (
+    //     <DatePicker
+    //       locale={locale}
+    //       onChange={onChangeDateType}
+    //       defaultValue={moment()}
+    //       picker="date"
+    //     />
+    //   );
+    // case YEAR:
+    //   return (
+    //     <DatePicker
+    //       locale={locale}
+    //       onChange={onChangeDateType}
+    //       defaultValue={moment()}
+    //       picker="year"
+    //     />
+    //   );
     default:
       return <></>;
   }
