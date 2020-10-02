@@ -2,19 +2,19 @@ import React from "react";
 import locale from "antd/es/date-picker/locale/ru_RU";
 import "moment/locale/ru";
 import { DatePicker } from "antd";
-import moment from "moment";
-import { DAY, RANGE, YEAR } from "../tools/constant";
+
+import { RANGE } from "../tools/constant";
 
 const { RangePicker } = DatePicker;
 
 const DatePanel = ({ dateType, fetchData }) => {
   const onChangeRange = (value) => {
-    fetchData(dateType, {from:value[0]._d, to:value[1]._d});
+    fetchData(dateType, { from: value[0]._d, to: value[1]._d });
   };
-  const onChangeDateType = (value) => {
-    if (value === null) return;
-    fetchData(dateType, value._d);
-  };
+  // const onChangeDateType = (value) => {
+  //   if (value === null) return;
+  //   fetchData(dateType, value._d);
+  // };
 
   switch (dateType) {
     case RANGE:

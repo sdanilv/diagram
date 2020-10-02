@@ -1,13 +1,18 @@
 import { GetImpulses } from "../api";
-import { formattedDate } from "../tools/FomatedDate";
 import moment from "moment";
 import { DAY, RANGE, WEEK, YEAR } from "../tools/constant";
 
 export const getReducers = (state, setState) => ({
+  setLoading: () => {
+    setState({ ...state, loading: true });
+  },
   fetchData: async (dateType, date) => {
+    console.log(new Date());
     setState({ ...state, loading: true });
 
-    const fetchedData = state.fetchedData.length?state.fetchedData : await GetImpulses(dateType, date);
+    const fetchedData = state.fetchedData.length
+      ? state.fetchedData
+      : await GetImpulses(dateType, date);
 
     let impulses = {};
     for (const impulse of fetchedData) {
@@ -29,11 +34,11 @@ export const getReducers = (state, setState) => ({
         from = moment(to).subtract(1, "years");
         break;
       case RANGE:
-        from = moment(date.from)
+        from = moment(date.from);
         to = moment(date.to).add(1, "days");
         break;
+      default:break;
     }
-    console.log(from)
 
     let endpointGroupedForDate = [];
     let i = 0;
@@ -53,10 +58,9 @@ export const getReducers = (state, setState) => ({
             sum = +sum + parseFloat(endpoint.price);
           }
         }
-        console.log(from)
         if (count) endpoints.push({ date: date.format("l"), count, sum });
       }
-        endpointGroupedForDate.push({ name: impulsesKey, id: i++, endpoints });
+      endpointGroupedForDate.push({ name: impulsesKey, id: i++, endpoints });
     }
 
     setState({
@@ -66,11 +70,14 @@ export const getReducers = (state, setState) => ({
       loading: false,
       charData: convertToChartData(endpointGroupedForDate, dateType),
     });
+    console.log(new Date());
   },
-  setDateType: dateType =>  setState({
-    ...state,
-    dateType,
-  })
+  setDateType: (dateType) =>
+    setState({
+      ...state,
+      loading: false,
+      dateType,
+    }),
 });
 
 const convertToChartData = (data, dateType) => {
@@ -86,5 +93,9 @@ const convertToChartData = (data, dateType) => {
       }))
     );
   });
-  return charData;
+  return charData.sort(
+    (a, b) =>
+      moment(a.date, "DD.MM.YYYY").valueOf() -
+      moment(b.date, "DD.MM.YYYY").valueOf()
+  );
 };

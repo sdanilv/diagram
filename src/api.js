@@ -1,10 +1,3 @@
-import moment from "moment";
-import {DAY, RANGE, WEEK, YEAR} from "./tools/constant";
-
-const fetchFromUrl = async (url) => {
-  let response = await fetch(`http://localhost:3004/${url}`);
-  return await response.json();
-};
 const impFetchFromUrl = async (url) => {
   let response = await fetch(
     `https://application0.impulse.ottry.com/api/${url}`,
@@ -19,28 +12,33 @@ const impFetchFromUrl = async (url) => {
 };
 
 export const GetImpulses = async (dateType, date) => {
-  let {content} = await impFetchFromUrl(
-    "users/5bf5699bf4466b5b480475a7/pageImpulseIdProjections?page=0&size=200&sort=id%2Cdesc&status=4"
+  let { content } = await impFetchFromUrl(
+    "users/5bf5699bf4466b5b480475a7/pageImpulseIdProjections?page=0&size=1000&sort=id%2Cdesc&status=4"
   );
-  let array = [];
-  for (let i = 0; i < 1; i++)
-    for (const imp of content) {
-      const {impulseEndpoints, modified, impulseService} = await impFetchFromUrl(
-          `impulses/search/findById?id=${imp.id}`
-      );
-      for (const i of impulseEndpoints) {
-        const cutImpulse = {
-          date: modified,
-          name: i.name,
-          service: impulseService.name,
-          price: i.price,
-        };
-        array.push(cutImpulse);
-      }
-    }
-  return array;
-};
 
+  let requests = content.map((imp) =>
+    impFetchFromUrl(`impulses/search/findById?id=${imp.id}`)
+  );
+
+  return Promise.all(requests)
+  .then((res) => {
+    return res.reduce(
+      (accumulator, { impulseEndpoints, modified, impulseService }) => {
+        for (const i of impulseEndpoints) {
+          accumulator.push({
+            date: modified,
+            name: i.name,
+            service: impulseService.name,
+            price: i.price,
+          });
+        }
+        return accumulator;
+      },
+      []
+    );
+  });
+};
+//{ impulseEndpoints, modified, impulseService }
 // export const getServicesName = (type, date) => fetchFromUrl(`services`);
 //fetchFromUrl(`services\names\?type=${type}&date=${date}`)
 //fetchFromUrl(`services\names\?type=range&from=${date.from}&to=${date.to}`)

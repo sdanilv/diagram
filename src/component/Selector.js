@@ -1,29 +1,24 @@
-import { Select, Checkbox } from "antd";
+import { Select } from "antd";
 import React from "react";
-import { DAY, MONTH, RANGE, WEEK, YEAR } from "../tools/constant";
+import { MONTH, RANGE, WEEK, YEAR } from "../tools/constant";
 import DatePanel from "./DatePanel";
 
 const { Option } = Select;
 
 const Selector = ({
   fetchData,
-                    loadDataInRange,
-  services,
-  setCheckedServices,
-  checkedServices,
+  loadDataInRange,
+  setLoading,
   setDateType,
   dateType,
-  endpoints,
-  checkedEndpoints,
-  setCheckedEndpoints,
 }) => {
-  function onChange(checkedValues) {
-    setCheckedServices(checkedValues);
-  }
-
-  function onChangeEndpoints(checkedValues) {
-    setCheckedEndpoints(checkedValues);
-  }
+  // function onChange(checkedValues) {
+  //   setCheckedServices(checkedValues);
+  // }
+  //
+  // function onChangeEndpoints(checkedValues) {
+  //   setCheckedEndpoints(checkedValues);
+  // }
 
   const onChangeType = (newType) => {
     if (newType === RANGE) {
@@ -36,7 +31,7 @@ const Selector = ({
 
   return (
     <>
-      <DatePanel {...{ dateType, loadDataInRange, fetchData }} />
+      <DatePanel {...{ dateType, loadDataInRange, fetchData, setLoading }} />
       <Select value={dateType} onChange={onChangeType}>
         {/*<Option value={DAY}>День</Option>*/}
         <Option value={WEEK}>Неделя</Option>

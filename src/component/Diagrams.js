@@ -22,6 +22,7 @@ const Diagrams = () => {
 
   useEffect(() => {
     reducers.fetchData(state.dateType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>

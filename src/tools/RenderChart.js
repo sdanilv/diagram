@@ -23,6 +23,7 @@ export const renderChart = (data, container, x, y) => {
     .color("name", ["#315cff", "#1890ff"]);
 
   chart.interaction("active-region");
+  chart.interaction("brush");
   chart.render();
   return chart;
 };
