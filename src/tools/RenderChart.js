@@ -5,6 +5,7 @@ export const renderChart = (data, container, x, y) => {
   const chart = new Chart({
     autoFit: true,
     container: container,
+    renderer:"svg"
   });
   chart.data(data);
   chart.scale(y, {
@@ -20,10 +21,10 @@ export const renderChart = (data, container, x, y) => {
     .interval()
     .position(`${x}*${y}`)
     .adjust("stack")
-    .color("name", ["#315cff", "#1890ff"]);
+    .color("name", "#1c3cff-#81ebff");
 
   chart.interaction("active-region");
-  chart.interaction("brush");
+  chart.forceFit ();
   chart.render();
   return chart;
 };

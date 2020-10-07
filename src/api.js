@@ -11,9 +11,9 @@ const impFetchFromUrl = async (url) => {
   return await response.json();
 };
 
-export const GetImpulses = async (dateType, date) => {
+export const GetImpulses = async () => {
   let { content } = await impFetchFromUrl(
-    "users/5bf5699bf4466b5b480475a7/pageImpulseIdProjections?page=0&size=1000&sort=id%2Cdesc&status=4"
+    "users/5bf5699bf4466b5b480475a7/pageImpulseIdProjections?page=0&size=200&sort=id%2Cdesc&status=4"
   );
 
   let requests = content.map((imp) =>

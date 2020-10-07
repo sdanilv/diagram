@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getReducers } from "../redux/reducers";
-import { MONTH } from "../tools/constant";
+import { WEEK} from "../tools/constant";
 import Diagram from "./Diagram";
-import style from "./Diagrams.module.css";
 import Selector from "./Selector";
 import { Empty, Spin } from "antd";
+import style from "./Diagrams.module.css";
 
 const Diagrams = () => {
   const [state, setState] = useState({
-    dateType: MONTH,
+    dateType: WEEK,
     services: [],
     endpoints: [],
     fetchedData: [],
@@ -16,7 +16,7 @@ const Diagrams = () => {
     checkedEndpoints: [],
     endpointsData: [],
     charData: [],
-    loading: true,
+    loading: false,
   });
   const reducers = getReducers(state, setState);
 
@@ -24,13 +24,15 @@ const Diagrams = () => {
     reducers.fetchData(state.dateType);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if(state.loading)
+     return <Spin size="large" />;
+
   return (
     <>
       <Selector {...state} {...reducers} />
       <div className={style.diagrams}>
-        {state.loading ? (
-          <Spin size="large" />
-        ) : state.charData.length ? (
+        {state.charData.length ? (
           <>
             <Diagram
               endpoints={state.charData}
